@@ -18,10 +18,13 @@
     <ClInclude Include="include\WorkHelperMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gui\GUI_WorkHelperApp.h">
+    <ClInclude Include="include\gui\WorkHelperApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gui\GUI_WorkHelperFrame.h">
+    <ClInclude Include="include\gui\WindowFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gui\FileExplorerPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,7 +32,10 @@
     <ClCompile Include="src\WorkHelperMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\GUI_WorkHelperFrame.cpp">
+    <ClCompile Include="src\gui\WindowFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\FileExplorerPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
