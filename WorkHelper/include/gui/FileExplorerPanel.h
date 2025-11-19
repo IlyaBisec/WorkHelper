@@ -3,11 +3,12 @@
 #endif // !_FILE_EXPLORER_PANEL_H_
 #pragma once
 
-// WorkHelperMain.H - hedder for cpp, for main call func for init
-// 25/10/2025
+// FileExplorerPanel.H - hedder for cpp, for main call func for init
+// 04/11/2025
 // ilya_bisec (c) 2025-2026
 
 #include <wx/wx.h>
+#
 #include <wx/dnd.h>
 
 // File exlporer panel class
