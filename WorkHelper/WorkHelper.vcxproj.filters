@@ -18,7 +18,7 @@
     <ClInclude Include="include\WorkHelperMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gui\WindowFrame.h">
+    <ClInclude Include="include\gui\MainWindowFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\gui\FileExplorerPanel.h">
@@ -29,7 +29,7 @@
     <ClCompile Include="src\WorkHelperMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\WindowFrame.cpp">
+    <ClCompile Include="src\gui\MainWindowFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\FileExplorerPanel.cpp">
