@@ -18,9 +18,6 @@
     <ClInclude Include="include\WorkHelperMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gui\WorkHelperApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\gui\WindowFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>

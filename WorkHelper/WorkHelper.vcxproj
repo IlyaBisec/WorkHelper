@@ -130,7 +130,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\gui\FileExplorerPanel.h" />
-    <ClInclude Include="include\gui\WorkHelperApp.h" />
     <ClInclude Include="include\gui\WindowFrame.h" />
     <ClInclude Include="include\WorkHelperMain.h" />
   </ItemGroup>
