@@ -54,6 +54,8 @@ public:
 private:
 	// Get system icon of file by extension
 	wxIcon getFileIcon(const wxString &path);
+	// Set size icon
+	wxIcon setFileIconSize(const wxIcon &icon, int size);
 	// Display file metadata
 	void onMouseMove(wxMouseEvent &evt);
 
