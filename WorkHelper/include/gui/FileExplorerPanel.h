@@ -3,69 +3,60 @@
 #endif // !_FILE_EXPLORER_PANEL_H_
 #pragma once
 
-// FileExplorerPanel.H - hedder for cpp, for main call func for init
+// FileExplorerPanel.H - header that contains GUI object as a custom list of files
 // 04/11/2025
 // ilya_bisec (c) 2025-2026
 
 #include <wx/wx.h>
-#
+#include <wx/dataview.h>
 #include <wx/dnd.h>
+#include <vector>
 
 // File exlporer panel class
 class FileExplorerPanel;
 
-// Drag and drop handler, передаёт информацию
-// o сброшенных файлах в FileExplorerPanel
+// Drag and drop handler, transfers info about
+// dropped files to the list area
 class FileDropTarget : public wxFileDropTarget
 {
 public:
-	explicit FileDropTarget(FileExplorerPanel *owner);
+	FileDropTarget(FileExplorerPanel *owner) : m_owner(owner){}
+	
+	// Cursor with files enters area
+	wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult result) override;
+	// Cursor with files leave area
+	void OnLeave() override;
+	// File drop event area
 	bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &filanames) override;
-	wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult result) override;
+	
 
 private:
 	FileExplorerPanel *m_owner;
 };
 
 // File explorer panel class
-// Панель отображение файлов:
-//	- Иконка файла
-//  - Имя выбранного файла
-//  - Кнопку добавить файл
-//  - Всплывающую подсказку с метаинф
-// 
-// Поддерживает:
-//	- Перетаскивание файла drag and drop
-//  - Вставка из буфера обмена(Ctrl+V)
-//  - Выбор через диалог
-//
-
-class FileExplorerPanel : public wxPanel
+// Custom file exolorer contains:
+//	- File icon
+//  - File name
+//  - File meta info
+class FileExplorerPanel : public wxDataViewListCtrl
 {
 public:
-	explicit FileExplorerPanel(wxWindow *parent);
-
-	// Устанавливает путь к файлу и обновляет отображение
-	void setFile(const wxString &path);
-	// Подсвечивает панель при наведении файла
+	FileExplorerPanel(wxWindow *parent);
+	
+	// Add file in list
+	void addFile(const wxString &path);
+	// Highlights panel when hovering over file
 	void highLight(bool enable); 
+	// Get full file path
+	wxString getFilePath(unsigned row) const;
 
 private:
-	wxStaticBitmap	*m_icon;
-	wxStaticText	*m_filename;
-	wxButton		*m_button;
-	wxString		m_path; // Full file path
+	// Get system icon of file by extension
+	wxIcon getFileIcon(const wxString &path);
+	// Display file metadata
+	void onMouseMove(wxMouseEvent &evt);
 
-	bool m_highlighted = false;
-
-	// Открывает диалог выбора файла (wxFileDialog)
-	void onAddFile(wxCommandEvent &event);
-	// Ctrl+V
-	void onPaste(wxKeyEvent &event);
-	// Обновляет отображение панели (иконка, имя, tooltip)
-	void updateDisplay();
-
-	wxString getFileToolTip(const wxString &path);
-
-	friend class FileDropTarget;
+	// Storing full file paths
+	std::vector<wxString> m_files;
 };
