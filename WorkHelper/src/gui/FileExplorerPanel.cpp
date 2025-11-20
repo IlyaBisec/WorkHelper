@@ -34,9 +34,13 @@ bool FileDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &fila
 // -----------------FileExplorerPanel--------------
 
 FileExplorerPanel::FileExplorerPanel(wxWindow *parent)
-	:wxDataViewListCtrl(parent, wxID_ANY, wxDefaultPosition, wxSize(200,80))
+	:wxDataViewListCtrl(parent, wxID_ANY, wxDefaultPosition, wxSize(400,80))
 {
-	//AppendIconTextColumn("File");
+	// Add hide column
+	auto *col = AppendIconTextColumn("");
+	col->SetWidth(0);
+	col->SetWidth(0);
+	col->SetResizeable(false);
 
 	// Handles mouse movement for tooltip metadata
 	Bind(wxEVT_MOTION, &FileExplorerPanel::onMouseMove, this);
@@ -63,10 +67,39 @@ wxIcon FileExplorerPanel::getFileIcon(const wxString &path)
 	return wxIcon();
 }
 
+wxIcon FileExplorerPanel::setFileIconSize(const wxIcon &icon, int size)
+{
+	if (!icon.IsOk())
+		return icon;
+
+	// Turn icon to bitmap
+	wxBitmap bmp(icon);
+
+	if (bmp.IsOk())
+		return icon;
+
+	// Convert icon to bitmap
+	wxImage image = bmp.ConvertToImage();
+	if (!image.IsOk())
+		return icon;
+
+	// Scale image
+	image = image.Scale(size, size, wxIMAGE_QUALITY_HIGH);
+
+	// Convert back
+	wxBitmap scaled(image);
+
+	wxIcon result;
+	result.CopyFromBitmap(scaled);
+	return result;
+	
+}
+
 void FileExplorerPanel::addFile(const wxString &path)
 {
 	wxFileName fileName(path);
 	wxIcon icon = getFileIcon(path);
+	icon = setFileIconSize(icon, 10);
 
 	// Icon + Text
 	wxDataViewIconText value(fileName.GetFullName(), icon);
@@ -116,8 +149,7 @@ void FileExplorerPanel::onMouseMove(wxMouseEvent &evt)
 
 		if (row != wxNOT_FOUND && static_cast<size_t>(row) < m_files.size())
 		{
-			wxString file = m_files[row];
-			wxFileName fileName(file);
+			wxFileName fileName(m_files[row]);
 
 			wxULongLong size = fileName.GetSize();
 			wxString sizeStr;
