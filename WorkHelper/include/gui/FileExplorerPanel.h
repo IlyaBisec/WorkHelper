@@ -11,6 +11,7 @@
 #include <wx/dataview.h>
 #include <wx/dnd.h>
 #include <vector>
+#include <set>
 
 // File exlporer panel class
 class FileExplorerPanel;
@@ -22,10 +23,6 @@ class FileDropTarget : public wxFileDropTarget
 public:
 	FileDropTarget(FileExplorerPanel *owner) : m_owner(owner){}
 	
-	// Cursor with files enters area
-	wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult result) override;
-	// Cursor with files leave area
-	void OnLeave() override;
 	// File drop event area
 	bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &filanames) override;
 	
@@ -39,26 +36,64 @@ private:
 //	- File icon
 //  - File name
 //  - File meta info
-class FileExplorerPanel : public wxDataViewListCtrl
+//  - Ctrl+Copy/Paste files(from win explorer) to list
+//  - Delete selection files in list
+class FileExplorerPanel : public wxScrolledWindow
 {
 public:
-	FileExplorerPanel(wxWindow *parent);
+	explicit FileExplorerPanel(wxWindow *parent, int rowHeight = 40);
+	~FileExplorerPanel() override = default;
 	
 	// Add file in list
 	void addFile(const wxString &path);
-	// Highlights panel when hovering over file
-	void highLight(bool enable); 
-	// Get full file path
-	wxString getFilePath(unsigned row) const;
+	// Clear list
+	void clear();
+	// Ctrl + Copy files from win explorer
+	void copySelectionToClipboard();
+	// Ctrl + Paste files to custom list
+	void pasteFromClipboard();
+	// Delete selection
+	void deleteSelection();
+
 
 private:
-	// Get system icon of file by extension
-	wxIcon getFileIcon(const wxString &path);
-	// Set size icon
-	wxIcon setFileIconSize(const wxIcon &icon, int size);
-	// Display file metadata
-	void onMouseMove(wxMouseEvent &evt);
+	struct Item 
+	{
+		wxString fullPath;
+		wxString name;
+		wxBitmap iconBmp; // Sized Bitmap
+	};
 
-	// Storing full file paths
-	std::vector<wxString> m_files;
+	std::vector<Item> m_items;
+	std::set<int> m_selected; // Multiple index selection
+
+	int m_rowHeight;
+	int m_hoverIndex; // - 1 if no hover
+	int m_anchorIndex; // For Shift selection
+
+	// Events
+	// Draw all rows
+	void onPaint(wxPaintEvent &evt); 
+	// Track hover and show tooltip
+	void onMouseMove(wxMouseEvent &evt);
+	// Left click - multi-select processing (Ctrl/Shift)
+	void onLeftDown(wxMouseEvent &evt);
+	void onLeaveWindow(wxMouseEvent &evt);
+	void onCharHook(wxKeyEvent &evt); // Delete, Ctrl+C/V
+
+	// Transform the event coordinates into a "non-scrolled" position and find the element index
+	int hitTestItem(const wxPoint &position) const;
+	// Get and scale icon
+	wxBitmap loadAndScaleIcon(const wxString &path, int size);
+	// Delete indices in descending order
+	void deleteIndices(const std::vector<int> &indicesDesc);
+
+	// Clipboard utils
+	void setFilesToClipboard(const wxArrayString &files);
+	wxArrayString getFilesFromClipboard();
+
+	// Draw 1 element
+	void drawItem(wxDC &dc, int index, const wxRect &rect);
+
+	wxDECLARE_EVENT_TABLE();
 };
