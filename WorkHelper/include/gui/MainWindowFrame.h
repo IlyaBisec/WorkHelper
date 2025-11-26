@@ -9,41 +9,25 @@
 
 
 #include "FileExplorerPanel.h"
+#include "ToolBarPanel.h"
 
 // Main window app
 class MainWindowFrame : public wxFrame
 {
 public:
-    MainWindowFrame()
-        : wxFrame(nullptr, wxID_ANY, "Custom File List", wxDefaultPosition, wxSize(500, 400))
-    {
-        wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+    MainWindowFrame();
 
-        // Create custom list
-        m_list = new FileExplorerPanel(this);
-        sizer->Add(m_list, 1, wxEXPAND | wxALL, 5);
-
-        // Button "Add file"
-        wxButton *addButton = new wxButton(this, wxID_ANY, "Add file");
-        sizer->Add(addButton, 0, wxALIGN_LEFT | wxALL, 5);
-
-        // Button click handler
-        addButton->Bind(wxEVT_BUTTON, &MainWindowFrame::onAddFile, this);
-
-        // Ctrl + V (paste files from buffer)
-        Bind(wxEVT_MENU, &MainWindowFrame::onPase, this, wxID_PASTE);
-
-        SetSizer(sizer);
-        Centre();
-    }
+    void initUI();
 
 private:
-    // File dialog
-    void onAddFile(wxCommandEvent &);
-    // Paste from buffer Ctrl + V
-    void onPase(wxCommandEvent &);
+    ToolbarPanel *m_toolbar = nullptr;
+    FileExplorerPanel *m_list = nullptr;
 
-    FileExplorerPanel *m_list;
+    // Event handlers
+    void onAdd(wxCommandEvent &evt);
+    void onDelete(wxCommandEvent &evt);
+    void onRefresh(wxCommandEvent &evt);
+    void onPaste(wxCommandEvent &evt);
 
     wxDECLARE_EVENT_TABLE();
 };
