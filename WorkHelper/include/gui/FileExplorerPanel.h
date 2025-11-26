@@ -79,7 +79,8 @@ private:
 	// Left click - multi-select processing (Ctrl/Shift)
 	void onLeftDown(wxMouseEvent &evt);
 	void onLeaveWindow(wxMouseEvent &evt);
-	void onCharHook(wxKeyEvent &evt); // Delete, Ctrl+C/V
+	// Keycodes Delete, Ctrl+C/V
+	void onCharHook(wxKeyEvent &evt); 
 
 	// Transform the event coordinates into a "non-scrolled" position and find the element index
 	int hitTestItem(const wxPoint &position) const;
