@@ -131,11 +131,13 @@
   <ItemGroup>
     <ClInclude Include="include\gui\FileExplorerPanel.h" />
     <ClInclude Include="include\gui\MainWindowFrame.h" />
+    <ClInclude Include="include\gui\ToolBarPanel.h" />
     <ClInclude Include="include\WorkHelperMain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gui\FileExplorerPanel.cpp" />
     <ClCompile Include="src\gui\MainWindowFrame.cpp" />
+    <ClCompile Include="src\gui\ToolBarPanel.cpp" />
     <ClCompile Include="src\WorkHelperMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
