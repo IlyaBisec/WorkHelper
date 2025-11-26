@@ -55,7 +55,22 @@ FileExplorerPanel::FileExplorerPanel(wxWindow *parent, int rowHeight)
 void FileExplorerPanel::addFile(const wxString &path)
 {
 	wxFileName fileName(path);
+	wxString name = fileName.GetFullName();
 
+	// Check duplicate file name
+	if (hasFileWithName(name))
+	{
+		wxMessageBox
+		(
+			"File with the same name already exists in the line: \n\n" + name,
+			"Duplicate file",
+			wxOK | wxICON_WARNING
+		);
+
+		return;
+	}
+
+	// Check file exists
 	if (!fileName.Exists())
 	{
 		int result = wxMessageBox
@@ -81,6 +96,7 @@ void FileExplorerPanel::addFile(const wxString &path)
 		return;
 	}
 
+	// Add file default
 	Item item;
 	item.fullPath = path;
 	item.name = fileName.GetFullName();
@@ -316,6 +332,17 @@ void FileExplorerPanel::drawItem(wxDC &dc, int index, const wxRect &rect)
 	int textX = iconX + (m_items[index].iconBmp.IsOk() ? m_items[index].iconBmp.GetWidth() + indent : 24);
 	int textY = rect.y + (m_rowHeight - dc.GetTextExtent(m_items[index].name).GetHeight()) / 2;
 	dc.DrawText(m_items[index].name, textX, textY);
+}
+
+bool FileExplorerPanel::hasFileWithName(const wxString &name) const
+{
+	for (const auto &item : m_items)
+	{
+		if (item.name.CmpNoCase(name) == 0) // No register
+			return true;
+	}
+	
+	return false;
 }
 
 void FileExplorerPanel::onMouseMove(wxMouseEvent &evt)

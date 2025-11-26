@@ -96,5 +96,8 @@ private:
 	// Draw 1 element
 	void drawItem(wxDC &dc, int index, const wxRect &rect);
 
+	// Checks for the file name matches
+	bool hasFileWithName(const wxString &name) const;
+
 	wxDECLARE_EVENT_TABLE();
 };
