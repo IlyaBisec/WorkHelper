@@ -360,14 +360,88 @@ void FileExplorerPanel::onMouseMove(wxMouseEvent &evt)
 
 void FileExplorerPanel::onLeftDown(wxMouseEvent &evt)
 {
+	int index = hitTestItem(evt.GetPosition());
+	if (index < 0)
+	{
+		// If click outside elements - deselect
+		m_selected.clear();
+		m_anchorIndex = -1;
+		Refresh();
+		evt.Skip();
+		return;
+	}
+
+	bool ctrl = evt.ControlDown();
+	bool shift = evt.ShiftDown();
+
+	// Shift select
+	if (shift && m_anchorIndex >= 0)
+	{
+		// Range select
+		int a = std::min(m_anchorIndex, index);
+		int b = std::max(m_anchorIndex, index);
+		for (int i = a; i <= b; ++i) m_selected.insert(i);
+	}
+	// Control select
+	else if (ctrl)
+	{
+		// Toggle selection
+		if (m_selected.find(index) != m_selected.end())
+		{
+			m_selected.erase(index);
+		}
+		else
+		{
+			m_selected.insert(index);
+		}
+		m_anchorIndex = index;
+
+	}
+	else
+	{
+		// Single select
+		m_selected.clear();
+		m_selected.insert(index);
+		m_anchorIndex = index;
+	}
+
+	Refresh();
+	SetFocus(); // Track keys
+	evt.Skip();
 }
 
 void FileExplorerPanel::onLeaveWindow(wxMouseEvent &evt)
 {
+	m_hoverIndex = -1;
+	UnsetToolTip();
+	Refresh();
 }
 
 void FileExplorerPanel::onCharHook(wxKeyEvent &evt)
 {
+	int key = evt.GetKeyCode();
+	bool ctrl = evt.ControlDown();
+
+	if (key == WXK_DELETE)
+	{
+		deleteSelection();
+		return;
+	}
+
+	if (ctrl && (key == 'C' || key == 'c'))
+	{
+		copySelectionToClipboard();
+		return;
+	}
+
+	if (ctrl && (key == 'V' || key == 'v'))
+	{
+		pasteFromClipboard();
+		return;
+	}
+
+	// Skip
+	evt.Skip();
 }
 
 
